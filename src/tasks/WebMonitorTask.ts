@@ -5,13 +5,11 @@ import {
     FromQueue,
     Job,
     NetworkTracing,
-    OnTime,
+    OnTime, Page,
     PuppeteerUtil,
-    PuppeteerWorkerFactory,
     RequestMapping,
     Transient
 } from "ppspider";
-import {Page} from "puppeteer";
 import {DelayExecutor} from "../util/DelayExecutor";
 import {DataViewer} from "../ui/DataViewer";
 import {Request, Response} from "express";
@@ -67,13 +65,11 @@ export class WebMonitorTask {
         urls: config.startUrls,
         cron: "* * * * * *",
         exeInterval: 600 * 1000,
-        workerFactory: PuppeteerWorkerFactory,
         // running: false
     })
     // 从 urls 队列中获取url，执行任务
     @FromQueue({
         name: "urls",
-        workerFactory: PuppeteerWorkerFactory,
         parallel: 3,
         exeInterval: 250,
         // running: false
@@ -140,7 +136,7 @@ export class WebMonitorTask {
     // 提供接口，供 timeline-viewer 获取数据，这里主要做了数据查询和跨域问题的处理
     @RequestMapping("/tracing")
     async getTracingFile(req: Request, res: Response) {
-        const pageRequests = await appInfo.db.findById("networkTracing", req.query.id);
+        const pageRequests = await appInfo.db.findById("networkTracing", req.query.id as string);
         const traceEvents = NetworkTracing.requestsToTraceEvents(pageRequests);
         const traceEventsStr = JSON.stringify(traceEvents);
         res.header("Access-Control-Allow-Origin", req.header("origin"));

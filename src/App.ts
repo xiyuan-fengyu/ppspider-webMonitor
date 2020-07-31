@@ -4,8 +4,8 @@ import {DataViewer} from "./ui/DataViewer";
 import {TimelineViewer} from "./timeline-viewer/TimelineViewer";
 
 @Launcher({
-    workplace: __dirname + "/workplace",
-    dbUrl: "mongodb://192.168.1.150:27017/bilibili",
+    workplace: "workplace",
+    dbUrl: "mongodb://192.168.99.150:27017/bilibili",
     tasks: [
         WebMonitorTask
     ],
